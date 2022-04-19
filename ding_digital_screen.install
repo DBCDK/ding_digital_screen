@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Handles installation/un-installation of Ding Digital Screen module.
+ */
+
+ /**
+ * Implements hook_install().
+ */
+function ding_digital_screen_install() {
+  try {
+    ding_digital_screen_add_site_template_config();
+  } catch (Exception $e) {
+    watchdog_exception('ding_digital_screen', $e);
+  }
+}
+
+
+ /**
+ * Implements hook_uninstall().
+ */
+function ding_digital_screen_uninstall() {
+  // Unset variables.
+ // variable_del('ding_redia_film_enable_logging');
+}
+
+ 

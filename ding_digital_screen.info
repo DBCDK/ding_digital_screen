@@ -1,0 +1,7 @@
+name = Ding Digital Screen
+description = Add a Digital Screen function to site
+package = Ding!
+version = "7.x-0.26"
+core = 7.x
+stylesheets[all][] = css/ding_digital_screen.css
+dependencies[] = ting

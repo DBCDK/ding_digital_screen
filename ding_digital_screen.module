@@ -1,0 +1,288 @@
+<?php
+
+/**
+ * @file
+ * Handles the shoving off Ding Digital Screens.
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function ding_digital_screen_menu() {
+  $items = [];
+
+  $items['admin/config/ding/ding_digital_screen'] = [
+    'title' => 'Digital Screen Settings',
+    'description' => 'Manage ding digital screen module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['ding_digital_screen_admin_form'],
+    'access arguments' => ['administer site configuration'],
+    'file' => 'includes/ding_digital_screen.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  $items['admin/structure/ding_digital_screens'] = [
+    'title' => 'Digital Screens',
+    'description' => 'Manage ding digital screen pages',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['ding_digital_screen_pages_form'],
+    'access arguments' => ['administer site configuration'],
+    'file' => 'includes/ding_digital_screen.pages.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  $items['admin/structure/digital/screen/%/edit'] = [
+    'title' => 'Digital Screen Page Edit',
+    'page callback' => 'ding_digital_screen_main_edit',
+    'page arguments' => [4],
+    'access arguments' => ['edit digital screens'],
+  ];
+
+  $items['admin/structure/digital/screen/%/delete'] = [
+    'title' => 'Digital Screen Page Delete',
+    'page callback' => 'ding_digital_screen_main_edit',
+    'page arguments' => [4],
+    'access arguments' => ['edit digital screens'],
+  ];
+
+  $items['admin/structure/digital/screen/add'] = [
+    'title' => 'Digital Screen Page Add',
+    'page callback' => 'ding_digital_screen_main_add',
+    'access arguments' => ['edit digital screens'],
+  ];
+
+  $items['digital/screen/%'] = [
+    'title' => 'Digital Screen Main',
+    'page callback' => 'ding_digital_screen_main',
+    'page arguments' => [2],
+    'access arguments' => ['access content'],
+  ];
+
+  $items['digital/screen/%/object/%'] = [
+    'title' => 'Digital Screen Object',
+    'page callback' => 'ding_digital_screen_object',
+    'page arguments' => [2,4],
+    'access arguments' => ['access content'],
+    'type' => MENU_CALLBACK,
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ding_digital_screen_theme($existing, $type, $theme, $path) {
+  return [
+    'ding_digital_screen_main' => [
+      'variables' => [
+        'checkout_confirmation' => '',
+        'checkout_status' => '',
+        'checkout_yes_button' => '',
+        'checkout_cancel_button' => '',
+        'watch_link' => '',
+      ],
+      'template' => 'ding-digital-screen-main',
+      'path' => $path . '/templates',
+    ],
+
+    'ding_digital_screen_object' => [
+      'variables' => [
+        'loan' => null,
+      ],
+      'template' => 'ding-digital-screen-object',
+      'path' => $path . '/templates',
+    ],
+
+    'ding_digital_screen_item' => [
+      'variables' => [
+        'user' => null,
+      ],
+      'template' => 'ding-digital-screen-item',
+      'path' => $path . '/templates',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_secure_permissions().
+ */
+function ding_digital_screen_secure_permissions($role) {
+  $permissions = array(
+    'administrators' => array(
+      'eck add digital_screen_page digital_screen_page entities',
+      'eck edit digital_screen_page digital_screen_pageentities',
+      'eck delete digital_screen_page digital_screen_page entities',
+      'eck list digital_screen_page digital_screen_page entities',
+      'eck view digital_screen_page digital_screen_page entities',
+      'edit digital screens'
+    ),
+    'editor' => array(
+      'eck add digital_screen_page digital_screen_page entities',
+      'eck edit digital_screen_page digital_screen_pageentities',
+      'eck delete digital_screen_page digital_screen_page entities',
+      'eck list digital_screen_page digital_screen_page entities',
+      'eck view digital_screen_page digital_screen_page entities',
+      'edit digital screens'
+    ),
+    'local administrator' => array(
+      'eck add digital_screen_page digital_screen_page entities',
+      'eck edit digital_screen_page digital_screen_pageentities',
+      'eck delete digital_screen_page digital_screen_page entities',
+      'eck list digital_screen_page digital_screen_page entities',
+      'eck view digital_screen_page digital_screen_page entities',
+      'edit digital screens'
+    ),
+  );
+
+  if (isset($permissions[$role])) {
+    return $permissions[$role];
+  }
+}
+
+function ding_digital_screen_main_add() {
+  $entity_type_name = 'digital_screen_page';
+  $entity_bundle_name = 'digital_screen_page';
+  module_load_include('inc', 'eck', 'eck.entity');
+
+
+  return eck__entity__add($entity_type_name, $entity_bundle_name);
+}
+
+function ding_digital_screen_main_edit($id) {
+  $entity_type_name = 'digital_screen_page';
+  $entity_bundle_name = 'digital_screen_page';
+  module_load_include('inc', 'eck', 'eck.entity');
+
+  $ssquery = new EntityFieldQuery();
+
+  $ssquery->entityCondition('entity_type', 'digital_screen_page')
+    ->entityCondition('bundle', 'digital_screen_page')
+    ->propertyCondition('id', $id, '=');
+
+  $result = $ssquery->execute();
+
+
+  $entity_id = current((array)$result['digital_screen_page'])->id;
+  $v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
+  if ($entity_id) {
+    return eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id);
+  }
+  else {
+   return '';
+  }
+}
+
+function ding_digital_screen_main($id) {
+  $page = ding_digital_screen_get_page($id);
+  $carousels = $page->field_dds_carousels->value();
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen9.txt", print_r($carousels, TRUE), FILE_APPEND);
+  return "main";
+}
+
+function ding_digital_screen_object($screen_id, $object_id) {
+  return "object";
+}
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function ding_digital_screen_form_alter(&$form, &$form_state, $form_id) {
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen3.txt", print_r($form_id, TRUE), FILE_APPEND);
+  // Check when the right form is passed.
+  if ($form_id == 'eck__entity__form_add_digital_screen_page_digital_screen_page' || $form_id == 'eck__entity__form_add_ting_type_smart_search_string') {
+
+    // Hide url redirect on this entity.
+    $form['redirect']['#access'] = FALSE;
+
+    // Form callback functions.
+    //$form['#pre_render'][] = 'smart_search_string_form_pre_render';
+    $form['#submit'][] = 'ding_digital_screen_form_submit';
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function ding_digital_screen_form_submit($form, &$form_state) {
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen1.txt", print_r($form, TRUE), FILE_APPEND);
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen2.txt", print_r($form_state, TRUE), FILE_APPEND);
+  // Return for to current search path.
+  $form_state['redirect'] = 'admin/structure/ding_digital_screens';
+}
+
+/**
+ * Watch film trailer.
+ */
+function ding_digital_screen_add_site_template_config() {
+  // There is no hook we can use so we interact directly with ctools module.
+  if (module_exists('ctools')) {
+    $access  = [];
+    $argument = 'site_template*site_template_search_blank';
+
+    $page = page_manager_get_page_cache('site_template');
+    $handler = $page->handlers['site_template_search_blank'];
+
+    if (isset($handler->conf['access'])) {
+      $access  = $handler->conf['access'];
+      if (isset($access['plugins'])) {
+        if (isset($access['plugins'][0]['settings']) && isset($access['plugins'][0]['settings']['paths'])) {
+          $paths = $access['plugins'][0]['settings']['paths'];
+          $paths = trim($paths);
+          $path_strings = explode("\n", $paths);
+
+          if (!in_array('digital/screen/*', $path_strings)) {
+            $paths .= "\ndigital/screen/*";
+          }
+          if (!in_array('film/libry/watchtrailer/*', $path_strings)) {
+            $paths .= "\nfilm/libry/watchtrailer/*";
+          }
+          $access['plugins'][0]['settings']['paths'] = $paths;
+
+          page_manager_task_handler_ctools_access_set($argument, $access);
+
+          // We get the page cache again to save the changes to the database
+          $page = page_manager_get_page_cache('site_template');
+          $handler = $page->handlers['site_template_search_blank'];
+          page_manager_save_task_handler($handler);
+          page_manager_clear_page_cache('site_template');
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Load the entity as object with entity_metadata_wrapper
+ *
+ * @param string $query
+ *   The Ting search query string.
+ *
+ * @return object
+ *   The entity object.
+ */
+function ding_digital_screen_get_page($id) {
+  $page = new stdClass();
+  module_load_include('inc', 'eck', 'eck.entity');
+
+  $ssquery = new EntityFieldQuery();
+
+  $ssquery->entityCondition('entity_type', 'digital_screen_page')
+    ->entityCondition('bundle', 'digital_screen_page')
+    ->propertyCondition('id', $id, '=');
+
+  $result = $ssquery->execute();
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen6.txt", print_r($result, TRUE), FILE_APPEND);
+  $entity_id =current((array)$result['digital_screen_page'])->id;
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen7.txt", print_r($entity_id, TRUE), FILE_APPEND);
+  if (isset($result['digital_screen_page'])) {
+    $string_items_nids = array_keys($result['digital_screen_page']);
+    $page = entity_metadata_wrapper('digital_screen_page', $string_items_nids[0]);
+  }
+
+  return $page;
+}
