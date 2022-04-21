@@ -41,7 +41,7 @@ function ding_digital_screen_menu() {
 
   $items['admin/structure/digital/screen/%/delete'] = [
     'title' => 'Digital Screen Page Delete',
-    'page callback' => 'ding_digital_screen_main_edit',
+    'page callback' => 'ding_digital_screen_main_delete',
     'page arguments' => [4],
     'access arguments' => ['edit digital screens'],
   ];
@@ -89,7 +89,7 @@ function ding_digital_screen_theme($existing, $type, $theme, $path) {
 
     'ding_digital_screen_object' => [
       'variables' => [
-        'loan' => null,
+        'object' => null,
       ],
       'template' => 'ding-digital-screen-object',
       'path' => $path . '/templates',
@@ -97,7 +97,7 @@ function ding_digital_screen_theme($existing, $type, $theme, $path) {
 
     'ding_digital_screen_item' => [
       'variables' => [
-        'user' => null,
+        'item' => null,
       ],
       'template' => 'ding-digital-screen-item',
       'path' => $path . '/templates',
@@ -141,6 +141,16 @@ function ding_digital_screen_secure_permissions($role) {
   }
 }
 
+/**
+ * Implementation of hook_preprocess_HOOK().
+ */
+function ding_digital_screen_preprocess_ding_carousel(&$vars){
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/slick1.txt", print_r($vars, TRUE), FILE_APPEND);
+  if (isset($vars['slick_settings'])) {
+    $vars['slick_settings']['arrows'] = false;
+  }
+}
+
 function ding_digital_screen_main_add() {
   $entity_type_name = 'digital_screen_page';
   $entity_bundle_name = 'digital_screen_page';
@@ -153,16 +163,8 @@ function ding_digital_screen_main_add() {
 function ding_digital_screen_main_edit($id) {
   $entity_type_name = 'digital_screen_page';
   $entity_bundle_name = 'digital_screen_page';
-  module_load_include('inc', 'eck', 'eck.entity');
 
-  $ssquery = new EntityFieldQuery();
-
-  $ssquery->entityCondition('entity_type', 'digital_screen_page')
-    ->entityCondition('bundle', 'digital_screen_page')
-    ->propertyCondition('id', $id, '=');
-
-  $result = $ssquery->execute();
-
+  $result = ding_digital_screen_get_entities($id);
 
   $entity_id = current((array)$result['digital_screen_page'])->id;
   $v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
@@ -177,10 +179,8 @@ function ding_digital_screen_main_edit($id) {
 }
 
 function ding_digital_screen_main($id) {
-  $page = ding_digital_screen_get_page($id);
-  $carousels = $page->field_dds_carousels->value();
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen9.txt", print_r($carousels, TRUE), FILE_APPEND);
-  return "main";
+  $page = new DigitalScreenPage($id);
+  return $page->renderPage();
 }
 
 function ding_digital_screen_object($screen_id, $object_id) {
@@ -194,25 +194,31 @@ function ding_digital_screen_object($screen_id, $object_id) {
 function ding_digital_screen_form_alter(&$form, &$form_state, $form_id) {
   file_put_contents("/var/www/drupalvm/drupal/web/debug/screen3.txt", print_r($form_id, TRUE), FILE_APPEND);
   // Check when the right form is passed.
-  if ($form_id == 'eck__entity__form_add_digital_screen_page_digital_screen_page' || $form_id == 'eck__entity__form_add_ting_type_smart_search_string') {
-
-    // Hide url redirect on this entity.
+  if ($form_id == 'eck__entity__form_add_digital_screen_page_digital_screen_page') {
     $form['redirect']['#access'] = FALSE;
-
-    // Form callback functions.
-    //$form['#pre_render'][] = 'smart_search_string_form_pre_render';
-    $form['#submit'][] = 'ding_digital_screen_form_submit';
+    $form['#submit'][] = 'ding_digital_screen_form_add_submit';
+  } 
+  else if ($form_id == 'eck__entity__form_edit_digital_screen_page_digital_screen_page') {
+    $form['redirect']['#access'] = FALSE;
+    $form['#submit'][] = 'ding_digital_screen_form_edit_submit';
   }
 }
 
 /**
  * Implements hook_form_submit().
  */
-function ding_digital_screen_form_submit($form, &$form_state) {
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen1.txt", print_r($form, TRUE), FILE_APPEND);
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen2.txt", print_r($form_state, TRUE), FILE_APPEND);
+function ding_digital_screen_form_add_submit($form, &$form_state) {
+  // file_put_contents("/var/www/drupalvm/drupal/web/debug/screen1.txt", print_r($form, TRUE), FILE_APPEND);
+  // file_put_contents("/var/www/drupalvm/drupal/web/debug/screen2.txt", print_r($form_state, TRUE), FILE_APPEND);
   // Return for to current search path.
   $form_state['redirect'] = 'admin/structure/ding_digital_screens';
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function ding_digital_screen_form_edit_submit($form, &$form_state) {
+  $form_state['redirect'] = current_path();
 }
 
 /**
@@ -256,6 +262,25 @@ function ding_digital_screen_add_site_template_config() {
   }
 }
 
+function ding_digital_screen_get_entities($id = null) {
+  try {
+    module_load_include('inc', 'eck', 'eck.entity');
+    $query = new EntityFieldQuery();
+  
+    $query->entityCondition('entity_type', 'digital_screen_page')
+      ->entityCondition('bundle', 'digital_screen_page');
+
+    if (isset($id)) {  
+      $query->propertyCondition('id', $id, '=');
+    }
+  
+    return $query->execute();
+  } catch (Exception $e) {
+    watchdog_exception('ding_digital_screen', $e);
+    return null;
+  }
+}
+
 /**
  * Load the entity as object with entity_metadata_wrapper
  *
@@ -267,15 +292,7 @@ function ding_digital_screen_add_site_template_config() {
  */
 function ding_digital_screen_get_page($id) {
   $page = new stdClass();
-  module_load_include('inc', 'eck', 'eck.entity');
-
-  $ssquery = new EntityFieldQuery();
-
-  $ssquery->entityCondition('entity_type', 'digital_screen_page')
-    ->entityCondition('bundle', 'digital_screen_page')
-    ->propertyCondition('id', $id, '=');
-
-  $result = $ssquery->execute();
+  $result = ding_digital_screen_get_entities($id);
   file_put_contents("/var/www/drupalvm/drupal/web/debug/screen6.txt", print_r($result, TRUE), FILE_APPEND);
   $entity_id =current((array)$result['digital_screen_page'])->id;
   file_put_contents("/var/www/drupalvm/drupal/web/debug/screen7.txt", print_r($entity_id, TRUE), FILE_APPEND);

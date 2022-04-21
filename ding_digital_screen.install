@@ -11,9 +11,21 @@
 function ding_digital_screen_install() {
   try {
     ding_digital_screen_add_site_template_config();
+
   } catch (Exception $e) {
     watchdog_exception('ding_digital_screen', $e);
   }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function ding_digital_screen_schema() {
+  $schema = array();
+  $schema['cache_digital_screen_pages'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_digital_screen_objects'] = drupal_get_schema_unprocessed('system', 'cache');
+
+  return $schema;
 }
 
 

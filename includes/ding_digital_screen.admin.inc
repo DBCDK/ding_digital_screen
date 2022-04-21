@@ -44,4 +44,3 @@ function ding_digital_screen_revert_configuration($form, &$form_state) {
     drupal_set_message(t('Failed to restore Digital Screen configuration'));
   }
 }
-

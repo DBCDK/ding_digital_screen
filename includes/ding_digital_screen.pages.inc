@@ -8,40 +8,65 @@
 /**
  * Implements hook_form().
  */
-function ding_digital_screen_admin_form($form, &$form_state) {
+function ding_digital_screen_pages_form($form, &$form_state) {
   $form = [];
 
-  $form['ding_digital_screen_enable_logging'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Enable logging'),
-    '#default_value' => variable_get('ding_digital_screen_enable_logging', FALSE),
+  $form['submit_button'] = [
+    '#value' => t('Add digital screen'),
+    '#type' => 'submit',
+    '#submit' => ['ding_digital_screen_add_screen'],
   ];
+  
+  $pages = ding_digital_screen_get_pages();
+  $header = [t('Pages'), t('Edit page'), t('Delete page')];
+  $pages_table = theme('table', ['header' => $header, 'rows' => $pages]);
 
-  $form['revert_config'] = array(
+  $form['pages'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Revert configuration'),
-    '#description' => t('Reverts the configuration after a update off DDBCMS has overridden them. Needs to be done every time DDBCMS is updated'),
+    '#title' => t('Digital screen pages'),
   );
 
-  $form['revert_config']['submit_button'] = [
-    '#value' => t('Revert configuration'),
-    '#type' => 'submit',
-    '#submit' => ['ding_digital_screen_revert_configuration'],
+  $form['pages']['table'] = [
+    '#markup' =>  $pages_table,
   ];
+
+
 
   return system_settings_form($form);
 }
 
 /**
- * Restore configuration to default.
+ * Add digital screen page submit function.
  */
-function ding_digital_screen_revert_configuration($form, &$form_state) {
-  try {
-    ding_digital_screen_add_site_template_config();
-    drupal_set_message(t('Digital Screen configuration restored'));
-  } catch (Exception $e) {
-    watchdog_exception('ding_digital_screen', $e);
-    drupal_set_message(t('Failed to restore Digital Screen configuration'));
+function ding_digital_screen_add_screen($form, &$form_state) {
+  drupal_goto('admin/structure/digital/screen/add');
+}
+
+/**
+ * Get all digital screen pages.
+ */
+function ding_digital_screen_get_pages() {
+  $pages = [];
+  $result = ding_digital_screen_get_entities();
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/all1.txt", print_r($result, TRUE), FILE_APPEND);
+  if (isset($result['digital_screen_page'])) {
+    foreach ($result['digital_screen_page'] as $id => $item) {
+      $pages[] = ding_digital_screen_process_page($id);
+    }
   }
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/all2.txt", print_r($pages, TRUE), FILE_APPEND);
+  return $pages;
+}
+
+/**
+ * Process a digital screen page.
+ */
+function ding_digital_screen_process_page($id) {
+  $page_entity = entity_metadata_wrapper('digital_screen_page', $id);
+  $title = $page_entity->title->value();
+  $page_link = l($title, 'digital/screen/' . $id);
+  $edit_link = l(t('Edit Digital Screen'), 'admin/structure/digital/screen/' . $id . '/edit' );
+  $delete_link = l(t('Delete Digital Screen'), 'admin/structure/digital/screen/' . $id . '/delete' );
+  return [$page_link, $edit_link, $delete_link];
 }
 
