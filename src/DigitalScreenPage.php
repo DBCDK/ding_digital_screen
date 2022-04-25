@@ -33,9 +33,7 @@ class DigitalScreenPage {
     // Handle cached page
     $page = '';
     $carousels = $this->handleCarousels();
-    foreach ($carousels as $carousel) {
-      $page .= $carousel;
-    }
+    $page = theme('ding_digital_screen_main', ['carousels' => $carousels]);
     return $page;
   }
 
@@ -50,7 +48,8 @@ class DigitalScreenPage {
     $carousels = $page->field_dds_carousels->value();
     // Get to each fieldcollection.
     foreach ($carousels as $carousel) {
-      $results[] = $this->handleCarousel($carousel);
+      $result = $this->handleCarousel($carousel);
+      $results[$result['title']] = $result['carousel'];
     }
     file_put_contents("/var/www/drupalvm/drupal/web/debug/screen9.txt", print_r($carousels, TRUE), FILE_APPEND);
     return $results;
@@ -73,10 +72,9 @@ class DigitalScreenPage {
     } else {
       $items  = $this->getObjectsWithRotation($query, $number_of_objects);
     }
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/car2.txt", print_r($title, TRUE), FILE_APPEND);
     $carousel = $this->createCarousel($items, $title);
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/items3.txt", print_r($carousel, TRUE), FILE_APPEND);
-    return $carousel; 
+
+    return ['carousel' => $carousel, 'title' => $title]; 
   }
 
     /**
@@ -157,13 +155,13 @@ class DigitalScreenPage {
       '#title' => $title,
       //'#path' => 'ting_smart_carousel/results/ajax/' . urlencode($query),
       '#items' => $items,
-      '#offset' => -1,
+      '#offset' => 1,
       // Add a single placeholder to fetch more content later if there is more
       // content.
-      '#placeholders' => 1,
+      '#placeholders' => -1,
     ];
 
-    return drupal_render($carousel );
+    return drupal_render($carousel);
   }
 
 
@@ -180,7 +178,11 @@ class DigitalScreenPage {
 
   function getQrImage($objectId) {
     $path = $this->qr_path($objectId);
-    return theme('image', ['path' => $path]);
+    $var = [
+      'path' => $path,
+      'attributes' => ['class' => 'digital-screen-qr-image'],
+    ];
+    return theme('image', $var);
   }
   
   function getCoverImage($objectId) {

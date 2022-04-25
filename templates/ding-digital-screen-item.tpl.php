@@ -7,14 +7,12 @@
  *
  */
 ?>
-
 <?php if ($item) : ?>
-  <li class="digital-screen-item">
     <div class="digital-screen-object-cover">
       <?php print $item->cover ?>
-    </div>
-    <div class="digital-screen-qr">
       <?php print $item->qr ?>
     </div>
-  </li>
+    <!-- <div class="digital-screen-qr">
+
+    </div> -->
 <?php endif; ?>

@@ -1,53 +1,57 @@
-.ting-object.view-mode-full .watch-button {
+.digital-sceen-main {
   background-color: #000;
-  color: #fff;
 }
 
-.ting-object.view-mode-full .watch-button, .ting-object.view-mode-full .watch-trailer-button {
-  text-decoration: none;
+body.page-digital-screen.page-digital  {
+  padding-top: 0px !important;
 }
 
-.redia-film-checkout p {
-  margin-bottom: 10px;
+.digital-sceen-carousel h2 {
+	color: #fff;
 }
 
-.redia-film-checkout a {
-  margin-right: 10px;
+.digital-screen-object-cover {
+	position: relative;
 }
 
-.redia-film-item {
+.digital-screen-qr-image {
+	position: absolute;
+	top: 80%;
+	left: 60%;
+}
+
+
+
+
+
+
+.slick-dots {
   display: flex;
-  margin-bottom: 15px;
-  padding: 15px;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem 0;
+
+  list-style-type: none;
 }
 
-.material-item.redia-film-item { 
-  padding: 20px;
+.slick-dots li {
+  margin: 0 0.25rem;
 }
 
-.redia-film-object-cover {
-  width: 20%;
-  margin-right: 20px;
+.slick-dots li button {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  
+  border: none;
+  border-radius: 100%;
+  background-color: orange;
+  
+  text-indent: -9999px;
 }
 
-.redia-film-object-content {
-  width: 47%;
-  display: flex;
-  flex-direction: column;
+.slick-dots li.slick-active button {
+  background-color: red;
 }
 
-.redia-film-object-actions {
-  width: 30%;
-}
-
-.redia-film-object-actions .watch-button {
-  background-color: #000;
-  color: #fff;
-}
-
-.redia-film-loan-status {
-  display: flex;
-  justify-content: space-between;
-  margin-right: 30px;
-  margin-top: 20px;
-}

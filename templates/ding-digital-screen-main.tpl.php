@@ -8,12 +8,16 @@
  */
 ?>
 
-<div class="redia-film-checkout">
-  <p><?php print $checkout_confirmation?></p>
-  <p><?php print $checkout_status?></p>
-  <div class="redia-film-confirmation">
-    <a href="<?php print $watch_link?>"><?php print $checkout_yes_button?></a>
-    <a id="redia-film-cancel-button"href=""><?php print $checkout_cancel_button?></a>
+<div class="digital-sceen-main">
+  <div class="digital-sceen-content">
+  <?php foreach($carousels as $title => $carousel): ?>
+    <div class="digital-sceen-carousel">
+      <h2><?php print $title ?></h2>
+      <?php print $carousel?>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <div class="digital-sceen-sidebar">
   </div>
 </div>
 
