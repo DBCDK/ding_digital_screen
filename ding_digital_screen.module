@@ -36,20 +36,20 @@ function ding_digital_screen_menu() {
     'title' => 'Digital Screen Page Edit',
     'page callback' => 'ding_digital_screen_main_edit',
     'page arguments' => [4],
-    'access arguments' => ['edit digital screens'],
+    'access arguments' => ['administer site configuration'],
   ];
 
   $items['admin/structure/digital/screen/%/delete'] = [
     'title' => 'Digital Screen Page Delete',
     'page callback' => 'ding_digital_screen_main_delete',
     'page arguments' => [4],
-    'access arguments' => ['edit digital screens'],
+    'access arguments' => ['administer site configuration'],
   ];
 
   $items['admin/structure/digital/screen/add'] = [
     'title' => 'Digital Screen Page Add',
     'page callback' => 'ding_digital_screen_main_add',
-    'access arguments' => ['edit digital screens'],
+    'access arguments' => ['administer site configuration'],
   ];
 
   $items['digital/screen/%'] = [
@@ -168,7 +168,7 @@ function ding_digital_screen_main_edit($id) {
   $result = ding_digital_screen_get_entities($id);
 
   $entity_id = current((array)$result['digital_screen_page'])->id;
-  $v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
+  //$v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
   //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
   //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
   if ($entity_id) {

@@ -132,8 +132,21 @@ class DigitalScreenPage {
    * 
    */
   private function getObjectsWithRotation($query, $number_of_objects) {
-    $results = [];
-    return $results;
+    file_put_contents("/var/www/drupalvm/drupal/web/debug/rot2.txt", print_r($number_of_objects , TRUE), FILE_APPEND);
+    $items = [];
+    $objects = [];
+    $objects_retrieved = 0;
+    $page = 1;
+    while ($objects_retrieved < $number_of_objects) {
+      $result = $this->search($query, $page, 50);
+      file_put_contents("/var/www/drupalvm/drupal/web/debug/rot3.txt", print_r($result , TRUE), FILE_APPEND);
+      array_push($objects, $result);
+      $objects_retrieved += 50;
+      $page++;
+      file_put_contents("/var/www/drupalvm/drupal/web/debug/rot4.txt", print_r( $objects_retrieved, TRUE), FILE_APPEND);
+    }
+    file_put_contents("/var/www/drupalvm/drupal/web/debug/rot1.txt", print_r($objects , TRUE), FILE_APPEND);
+    return $items;
   }
 
   /**
