@@ -107,24 +107,11 @@ class DigitalScreenPage {
    *Handles Caraousels.
    * 
    */
-  private function getObjects($query) {
-    $items = [];
+  private function getObjects($query) { 
     $objects = $this->search($query, 1, 50);
     $covers = $this->get_covers($objects);
-    $objects_per_carousel = variable_get('$objects_per_carousel', 16);
-    $found_covers = array_slice($covers, 0, $objects_per_carousel);
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car4.txt", print_r($objects, TRUE), FILE_APPEND);
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car6.txt", print_r($covers, TRUE), FILE_APPEND);
-
-    foreach ($found_covers as $objectId => $cover) {
-      $path = $this->object_path($objectId);
-      file_unmanaged_copy($cover, $path, FILE_EXISTS_REPLACE); 
-      $this->create_cr($objectId);
-      $items[] = $this->createItem($objectId, $objects[$objectId]);
-
-    }
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/items1.txt", print_r($items, TRUE), FILE_APPEND);
-    return $items;
+    file_put_contents("/var/www/drupalvm/drupal/web/debug/items1.txt", print_r($objects, TRUE), FILE_APPEND);
+    return $this->handleCovers($covers, $objects);
   }
 
   /**
@@ -132,20 +119,58 @@ class DigitalScreenPage {
    * 
    */
   private function getObjectsWithRotation($query, $number_of_objects) {
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/rot2.txt", print_r($number_of_objects , TRUE), FILE_APPEND);
-    $items = [];
     $objects = [];
     $objects_retrieved = 0;
     $page = 1;
     while ($objects_retrieved < $number_of_objects) {
-      $result = $this->search($query, $page, 50);
-      file_put_contents("/var/www/drupalvm/drupal/web/debug/rot3.txt", print_r($result , TRUE), FILE_APPEND);
-      array_push($objects, $result);
+      $results = $this->search($query, $page, 50);
+      //file_put_contents("/var/www/drupalvm/drupal/web/debug/rot3.txt", print_r($results , TRUE), FILE_APPEND);
+      foreach ($results as $key => $object) {
+        $objects[$key] =  $object;
+      }
       $objects_retrieved += 50;
       $page++;
-      file_put_contents("/var/www/drupalvm/drupal/web/debug/rot4.txt", print_r( $objects_retrieved, TRUE), FILE_APPEND);
     }
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/rot1.txt", print_r($objects , TRUE), FILE_APPEND);
+    
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/rot1.txt", print_r($objects , TRUE), FILE_APPEND);
+    $covers = $this->get_covers($objects);
+    $covers = $this->shuffle_assoc($covers);
+    return $this->handleCovers($covers, $objects);
+  }
+
+  /**
+   *Handles Caraousels.
+   * 
+   */
+  private function shuffle_assoc($list) { 
+    if (!is_array($list)) return $list; 
+  
+    $keys = array_keys($list); 
+    shuffle($keys); 
+    $random = array(); 
+    foreach ($keys as $key) { 
+      $random[$key] = $list[$key]; 
+    }
+    return $random; 
+  } 
+
+     /**
+   *Handles Caraousels.
+   * 
+   */
+  private function handleCovers($covers, $objects) {
+    $items = [];
+    $objects_per_carousel = variable_get('$objects_per_carousel', 16);
+    $found_covers = array_slice($covers, 0, $objects_per_carousel);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car4.txt", print_r($objects, TRUE), FILE_APPEND);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car6.txt", print_r($covers, TRUE), FILE_APPEND);
+
+    foreach ($found_covers as $objectId => $cover) {
+      $path = $this->object_path($objectId);
+      file_unmanaged_copy($cover, $path, FILE_EXISTS_REPLACE);
+      $this->create_cr($objectId);
+      $items[] = $this->createItem($objectId, $objects[$objectId]);
+    }
     return $items;
   }
 
