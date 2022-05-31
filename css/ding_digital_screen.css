@@ -14,13 +14,47 @@ body.page-digital-screen.page-digital  {
 	position: relative;
 }
 
-.digital-screen-qr-image {
+.ding-carousel-item .digital-screen-qr-image {
 	position: absolute;
 	top: 80%;
 	left: 60%;
+  width: 25%;
 }
 
 
+/* Digital screen objects page */
+
+.digital-screen-object-page {
+  background-color: #000;
+  display: flex; 
+  padding: 30px;
+  color: #fff;
+}
+
+.digital-screen-object {
+  width: 92%
+}
+
+.digital-screen-object-container {
+  display: flex; 
+}
+
+.digital-screen-object-page-cover {
+	width: 40%;
+}
+
+.digital-screen-object-carousel .ding-carousel .slick-slider {
+  min-height: 150px;
+}
+
+.digital-screen-object-page  .digital-screen-object-cover a img {
+  height: 145px !important;
+  width: 100px !important;
+}
+
+.digital-screen-object-page  .ding-carousel .slick-slider .slick-track .slick-slide {
+  width: 145px;
+}
 
 
 

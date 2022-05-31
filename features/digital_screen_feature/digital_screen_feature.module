@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Digital Screen Feature feature.
+ */
+
+include_once 'digital_screen_feature.features.inc';

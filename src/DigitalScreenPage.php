@@ -38,6 +38,25 @@ class DigitalScreenPage {
   }
 
   /**
+   * Renders the object.
+   * 
+   * @return string $html
+   *   The html for the page.
+   */
+  public function renderObject($objectId) {
+    $cacheId = $this->createObjectCacheId($objectId);
+    $object =  cache_get($cacheId, 'cache_digital_screen_objects');
+    if (!$object) {
+      $this->handleCarousels();
+      $object =  cache_get($cacheId, 'cache_digital_screen_objects');
+      //file_put_contents("/var/www/drupalvm/drupal/web/debug/object3.txt", print_r($object, TRUE), FILE_APPEND);
+    }
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/object2.txt", print_r($object, TRUE), FILE_APPEND);
+    $page = theme('ding_digital_screen_object', ['object' => $object->data]);
+    return $page;
+  }
+
+  /**
    *Handles Caraousels.
    * 
    */
@@ -51,7 +70,7 @@ class DigitalScreenPage {
       $result = $this->handleCarousel($carousel);
       $results[$result['title']] = $result['carousel'];
     }
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/screen9.txt", print_r($carousels, TRUE), FILE_APPEND);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen9.txt", print_r($carousels, TRUE), FILE_APPEND);
     return $results;
   }
 
@@ -62,7 +81,7 @@ class DigitalScreenPage {
   private function handleCarousel($carousel) {
     $items  = [];
     $carousel_entity = entity_metadata_wrapper('paragraphs_item', $carousel);
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/car1.txt", print_r($carousel_entity, TRUE), FILE_APPEND);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car1.txt", print_r($carousel_entity, TRUE), FILE_APPEND);
     $title = $carousel_entity->field_ds_title->value();
     $query = $carousel_entity->field_search->value();
     $rotate = $carousel_entity->field_rotate->value();
@@ -74,7 +93,14 @@ class DigitalScreenPage {
     }
     $carousel = $this->createCarousel($items, $title);
 
-    return ['carousel' => $carousel, 'title' => $title]; 
+    foreach ($items as $item) {
+      $item->carousel = $carousel;
+      //file_put_contents("/var/www/drupalvm/drupal/web/debug/object1.txt", print_r($item, TRUE), FILE_APPEND);
+      $cacheId = $this->createObjectCacheId($item->objectid);
+      cache_set($cacheId, $item, 'cache_digital_screen_objects');
+    }
+
+    return ['carousel' => drupal_render($carousel), 'title' => $title]; 
   }
 
     /**
@@ -87,17 +113,17 @@ class DigitalScreenPage {
     $covers = $this->get_covers($objects);
     $objects_per_carousel = variable_get('$objects_per_carousel', 16);
     $found_covers = array_slice($covers, 0, $objects_per_carousel);
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/car4.txt", print_r($objects, TRUE), FILE_APPEND);
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/car6.txt", print_r($covers, TRUE), FILE_APPEND);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car4.txt", print_r($objects, TRUE), FILE_APPEND);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car6.txt", print_r($covers, TRUE), FILE_APPEND);
 
     foreach ($found_covers as $objectId => $cover) {
       $path = $this->object_path($objectId);
       file_unmanaged_copy($cover, $path, FILE_EXISTS_REPLACE); 
       $this->create_cr($objectId);
-      $items[] = $this->createItem($objectId);
-      // TODO cache objectdata
+      $items[] = $this->createItem($objectId, $objects[$objectId]);
+
     }
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/items1.txt", print_r($items, TRUE), FILE_APPEND);
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/items1.txt", print_r($items, TRUE), FILE_APPEND);
     return $items;
   }
 
@@ -150,28 +176,62 @@ class DigitalScreenPage {
   }
 
   function createCarousel($items, $title) {
+    $render_items = [];
+    foreach ($items as $item) {
+      $render_items[] = theme('ding_digital_screen_item', ['item' => $item]);
+    }
     $carousel = [
       '#type' => 'ding_carousel',
       '#title' => $title,
-      //'#path' => 'ting_smart_carousel/results/ajax/' . urlencode($query),
-      '#items' => $items,
+      '#items' => $render_items,
       '#offset' => 1,
       // Add a single placeholder to fetch more content later if there is more
       // content.
       '#placeholders' => -1,
     ];
 
-    return drupal_render($carousel);
+    return $carousel;
   }
 
 
-
-
-
-  function createItem($objectId) {
+  function createItem($objectId, $object) {
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/items2.txt", print_r($object, TRUE), FILE_APPEND);
     $item = new DigitalScreenObject();
-    $item->cover = $this->getCoverImage($objectId); 
+    $item->objectid = $objectId;
+    $item->cover = $this->getCoverImage($objectId, 'ting_search_carousel');
+    $item->bigCover = $this->getCoverImage($objectId, 'ding_digital_screen_large'); 
     $item->qr = $this->getQrImage($objectId);
+    $item->title = $this->getTitle($object);
+    $item->creators = $this->get_creators($object);
+    $item->abstract = $object->getAbstract();
+    $item->series = $this->getSeries($object);
+    $item->type =$object->getType();
+    //file_put_contents("/var/www/drupalvm/drupal/web/debug/items3.txt", print_r($item , TRUE), FILE_APPEND);
+    return $item; 
+  }
+
+  function getTitle($object) {
+    $title = $object->getTitle();
+    $languge = $object->getLanguage();
+    return $title . '(' . $languge . ')';
+  }
+
+  function getSeries($object) {
+    if (!empty($object->getSeriesTitles())) {
+      //file_put_contents("/var/www/drupalvm/drupal/web/debug/items4.txt", print_r($object->getSeriesTitles(), TRUE), FILE_APPEND);
+      $series = $object->getSeriesTitles()[0];
+      $series_title = $series[0];
+      if (isset($series[1])) {
+        $series_title .= '; ' . $series[1];
+      }
+      return $series_title;
+    } else if ($object->getSerieDescription()) {
+      return $object->getSerieDescription();
+    }
+    return null;
+  }
+
+  function createObject($objectId, $object, $item) {
 
     return theme('ding_digital_screen_item', ['item' => $item]);
   }
@@ -185,11 +245,11 @@ class DigitalScreenPage {
     return theme('image', $var);
   }
   
-  function getCoverImage($objectId) {
+  function getCoverImage($objectId, $style) {
     $url = 'digital/screen/' . $this->id . '/object/' . $objectId;
     $path = $this->object_path($objectId);
 
-    $params = ['style_name' => 'ting_search_carousel', 'path' => $path];
+    $params = ['style_name' => $style, 'path' => $path];
     $image = theme('image_style', $params);
 
     $options = array(
@@ -198,24 +258,24 @@ class DigitalScreenPage {
     return l($image, $url, $options);
   }
 
-  // function ting_smart_carousel_get_creators($object) {
-  //   if (count($object->getCreators())) {
-  //     if ($object->getDate()!= '') {
-  //       $markup_string = t('By !author_link (@year)', array(
-  //           '!author_link' => implode(', ', $object->getCreators()),
-  //           // So wrong, but appears to be the way the data is.
-  //           '@year' => $object->getDate(),
-  //       ));
-  //     } else {
-  //       $markup_string = t('By !author_link', array(
-  //           '!author_link' => implode(', ', $object->getCreators()),
-  //       ));
-  //     }
-  //   } elseif ($object->getDate() != '') {
-  //     $markup_string = t('(@year)', array('@year' => $object->getDate()));
-  //   }
-  //   return $markup_string;
-  // }
+  function get_creators($object) {
+    if (count($object->getCreators())) {
+      if ($object->getDate()!= '') {
+        $markup_string = t('By !author_link (@year)', array(
+            '!author_link' => implode(', ', $object->getCreators()),
+            // So wrong, but appears to be the way the data is.
+            '@year' => $object->getDate(),
+        ));
+      } else {
+        $markup_string = t('By !author_link', array(
+            '!author_link' => implode(', ', $object->getCreators()),
+        ));
+      }
+    } elseif ($object->getDate() != '') {
+      $markup_string = t('(@year)', array('@year' => $object->getDate()));
+    }
+    return $markup_string;
+  }
   
   // function ting_smart_carousel_uri($object) {
   //   return 'ting/collection/' . $object->id;
@@ -289,6 +349,14 @@ class DigitalScreenPage {
     $path .= DIRECTORY_SEPARATOR . $this->id;
     file_unmanaged_delete_recursive($path);
     file_prepare_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  }
+
+  /**
+   *Handles Caraousels.
+   * 
+   */
+  private function createObjectCacheId($object_id) {
+    return 'object-' . $this->id . '-' . $object_id;
   }
   
 }

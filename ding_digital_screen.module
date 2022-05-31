@@ -169,8 +169,8 @@ function ding_digital_screen_main_edit($id) {
 
   $entity_id = current((array)$result['digital_screen_page'])->id;
   $v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
+  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
+  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
   if ($entity_id) {
     return eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id);
   }
@@ -184,8 +184,9 @@ function ding_digital_screen_main($id) {
   return $page->renderPage();
 }
 
-function ding_digital_screen_object($screen_id, $object_id) {
-  return "object";
+function ding_digital_screen_object($id, $object_id) {
+  $page = new DigitalScreenPage($id);
+  return $page->renderObject($object_id);
 }
 
 
@@ -193,7 +194,7 @@ function ding_digital_screen_object($screen_id, $object_id) {
  * Implements hook_form_alter().
  */
 function ding_digital_screen_form_alter(&$form, &$form_state, $form_id) {
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen3.txt", print_r($form_id, TRUE), FILE_APPEND);
+  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen3.txt", print_r($form_id, TRUE), FILE_APPEND);
   // Check when the right form is passed.
   if ($form_id == 'eck__entity__form_add_digital_screen_page_digital_screen_page') {
     $form['redirect']['#access'] = FALSE;
@@ -294,9 +295,9 @@ function ding_digital_screen_get_entities($id = null) {
 function ding_digital_screen_get_page($id) {
   $page = new stdClass();
   $result = ding_digital_screen_get_entities($id);
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen6.txt", print_r($result, TRUE), FILE_APPEND);
+  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen6.txt", print_r($result, TRUE), FILE_APPEND);
   $entity_id =current((array)$result['digital_screen_page'])->id;
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen7.txt", print_r($entity_id, TRUE), FILE_APPEND);
+  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen7.txt", print_r($entity_id, TRUE), FILE_APPEND);
   if (isset($result['digital_screen_page'])) {
     $string_items_nids = array_keys($result['digital_screen_page']);
     $page = entity_metadata_wrapper('digital_screen_page', $string_items_nids[0]);

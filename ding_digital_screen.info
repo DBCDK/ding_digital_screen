@@ -8,3 +8,4 @@ files[] = src/DigitalScreenPage.php
 files[] = lib/phpqrcode.php
 stylesheets[all][] = css/ding_digital_screen.css
 dependencies[] = ting
+dependencies[] = digital_screen_feature
