@@ -56,6 +56,12 @@ body.page-digital-screen.page-digital  {
   width: 145px;
 }
 
+/* Admin page */
+
+.page-admin-structure-digital-screen li.ding-carousel-item {
+  margin-right: 50px;
+}
+
 
 
 

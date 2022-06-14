@@ -29,12 +29,22 @@ class DigitalScreenPage {
    * @return string $html
    *   The html for the page.
    */
-  public function renderPage() {
-    // Handle cached page
-    $page = '';
-    $carousels = $this->handleCarousels();
-    $page = theme('ding_digital_screen_main', ['carousels' => $carousels]);
-    return $page;
+  public function renderPage(bool $useCache = true) {
+    $output = [];
+    $cache = cache_get($this->id, 'cache_digital_screen_pages');
+    file_put_contents("/var/www/drupalvm/drupal/web/debug/object4.txt", print_r($cache->data, TRUE), FILE_APPEND);
+    if (!$cache || !$useCache) {
+      $carousels = $this->handleCarousels();
+      cache_set($this->id, $carousels, 'cache_digital_screen_pages');
+      file_put_contents("/var/www/drupalvm/drupal/web/debug/object3.txt", print_r($carousels, TRUE), FILE_APPEND);
+    } else {
+      $carousels = $cache->data;
+    }
+    foreach ($carousels as $title => $carousel) {
+      $output[$title] = drupal_render($carousel);
+    }
+    file_put_contents("/var/www/drupalvm/drupal/web/debug/object5.txt", print_r($output, TRUE), FILE_APPEND);
+    return theme('ding_digital_screen_main', ['carousels' => $output ]);
   }
 
   /**
@@ -100,7 +110,7 @@ class DigitalScreenPage {
       cache_set($cacheId, $item, 'cache_digital_screen_objects');
     }
 
-    return ['carousel' => drupal_render($carousel), 'title' => $title]; 
+    return ['carousel' => $carousel, 'title' => $title]; 
   }
 
     /**
@@ -315,11 +325,6 @@ class DigitalScreenPage {
     return $markup_string;
   }
   
-  // function ting_smart_carousel_uri($object) {
-  //   return 'ting/collection/' . $object->id;
-  // }
-  
-  
   /**
    * Get covers for an array of ids.
    *
@@ -346,6 +351,11 @@ class DigitalScreenPage {
         $covers[$id] = $path;
         continue;
       }
+      $local_cover = $this->check_uploadet_cover($object->getLocalId());
+      if (!(empty($local_cover))) {
+        $covers[$id] = $local_cover[0];
+      } 
+
   
       // Queue for fetching by hook.
       $entities[$id] = ''; 
@@ -369,6 +379,11 @@ class DigitalScreenPage {
     $path = $this->qr_path($object_id);
     $url = url('ting/object/' . $object_id, ['absolute' => TRUE]);
     QRcode::png($url, $path); 
+  }
+
+  function check_uploadet_cover($id) {
+    $path = file_default_scheme() . '://digital_screen_images/' . $id . '.*';
+    return glob (drupal_realpath($path));
   }
 
   function object_path($object_id) {

@@ -168,11 +168,12 @@ function ding_digital_screen_main_edit($id) {
   $result = ding_digital_screen_get_entities($id);
 
   $entity_id = current((array)$result['digital_screen_page'])->id;
-  //$v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
-  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
+  $v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
+  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
   //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
   if ($entity_id) {
-    return eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id);
+    $page = new DigitalScreenPage($id);
+    return drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id)) . $page->renderPage(false);
   }
   else {
    return '';
