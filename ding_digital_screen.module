@@ -78,6 +78,7 @@ function ding_digital_screen_theme($existing, $type, $theme, $path) {
     'ding_digital_screen_main' => [
       'variables' => [
         'carousels' => null,
+        'info' => '',
       ],
       'template' => 'ding-digital-screen-main',
       'path' => $path . '/templates',
@@ -181,11 +182,13 @@ function ding_digital_screen_main_edit($id) {
 }
 
 function ding_digital_screen_main($id) {
+  drupal_add_js(drupal_get_path('module', 'ding_digital_screen') . '/js/ding_digital_screen.js', 'file');
   $page = new DigitalScreenPage($id);
   return $page->renderPage();
 }
 
 function ding_digital_screen_object($id, $object_id) {
+
   $page = new DigitalScreenPage($id);
   return $page->renderObject($object_id);
 }

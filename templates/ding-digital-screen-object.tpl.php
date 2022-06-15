@@ -52,10 +52,10 @@
 
   <div class="digital-screen-object-actions">
     <div class="digital-screen-object-return">
-      Return
+      <?php print $object->backArrow ?>
     </div>
     <div class="digital-screen-object-help">
-      ?
+      <?php print $object->info ?>
     </div>
   </div>
 </div>

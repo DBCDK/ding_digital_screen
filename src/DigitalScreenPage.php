@@ -44,7 +44,7 @@ class DigitalScreenPage {
       $output[$title] = drupal_render($carousel);
     }
     file_put_contents("/var/www/drupalvm/drupal/web/debug/object5.txt", print_r($output, TRUE), FILE_APPEND);
-    return theme('ding_digital_screen_main', ['carousels' => $output ]);
+    return theme('ding_digital_screen_main', ['carousels' => $output, 'info' => $this->getInfo()]);
   }
 
   /**
@@ -59,9 +59,9 @@ class DigitalScreenPage {
     if (!$object) {
       $this->handleCarousels();
       $object =  cache_get($cacheId, 'cache_digital_screen_objects');
-      //file_put_contents("/var/www/drupalvm/drupal/web/debug/object3.txt", print_r($object, TRUE), FILE_APPEND);
     }
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/object2.txt", print_r($object, TRUE), FILE_APPEND);
+    $object->data->backArrow = $this->getBackArrow();
+    $object->data->info = $this->getInfo();
     $page = theme('ding_digital_screen_object', ['object' => $object->data]);
     return $page;
   }
@@ -373,6 +373,21 @@ class DigitalScreenPage {
       }
     }
     return $covers;
+  }
+
+  function getBackArrow() {
+    $path = 'digital/screen/' . $this->id;
+    $image_path = drupal_get_path('module', 'ding_digital_screen') . '/images/arrow.png';
+    $image = theme('image', ['path' => $image_path]);
+    $options = ['html' => TRUE];
+    return l($image, $path, $options);
+  }
+
+  function getInfo() {
+    $image_path = drupal_get_path('module', 'ding_digital_screen') . '/images/questionmark.png';
+    $image = theme('image', ['path' => $image_path]);
+//Todo text
+    return $image;
   }
 
   function create_cr($object_id) {
