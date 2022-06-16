@@ -38,14 +38,22 @@
             <?php print $object->qr ?>
           </div>
           <div class="digital-screen-object-qr-text">
+            <h2>
             Scan koden</br>
-            med din mobil
+            med din mobil</h2>
           </div>
         </div>
       </div>
     </div>
-    <div class="digital-screen-object-carousel">
+    <div class="digital-screen-carousel">
+      <hr>
       <?php print drupal_render($object->carousel) ?>
+      <ul class="horisontal-dots">
+            <li class="horisontal-dot horisontal-dot--1 active"></li>
+            <li class="horisontal-dot horisontal-dot--2"></li>
+            <li class="horisontal-dot horisontal-dot--3"></li>
+            <li class="horisontal-dot horisontal-dot--4"></li>
+          </ul>
     </div>
 
   </div>

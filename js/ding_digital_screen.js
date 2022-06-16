@@ -26,7 +26,7 @@
     // On change slide event.
     $('.ding-carousel').on('afterChange', function (event, slick, currentSlide) {
       console.log(currentSlide);
-      var container = $(this).closest('.digital-sceen-carousel');
+      var container = $(this).closest('.digital-screen-carousel');
       container.find('.horisontal-dot').removeClass('active');
       if (currentSlide < 4) {
         container.find('.horisontal-dot--1').addClass('active');

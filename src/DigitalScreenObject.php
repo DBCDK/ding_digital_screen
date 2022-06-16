@@ -19,6 +19,7 @@ class DigitalScreenObject
   public $cover;
   public $bigCover;
   public $qr;
+  public $bigQR;
   public $backArrow;
   public $info;
 

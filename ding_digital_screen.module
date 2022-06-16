@@ -145,11 +145,6 @@ function ding_digital_screen_preprocess_ding_carousel(&$vars){
   file_put_contents("/var/www/drupalvm/drupal/web/debug/slick1.txt", print_r($vars, TRUE), FILE_APPEND);
   if (isset($vars['slick_settings'])) {
     $vars['slick_settings']['arrows'] = false;
-    // $vars['slick_settings']['dots'] = true;
-    // // $vars['slick_settings']['swipe'] = true;
-    // $vars['slick_settings']['swipeToSlide'] = 1;
-    // $vars['slick_settings']['slidesToScroll'] = 1;
-    // $vars['slick_settings']['touchMove'] = true;
   }
 }
 
@@ -169,8 +164,7 @@ function ding_digital_screen_main_edit($id) {
   $result = ding_digital_screen_get_entities($id);
 
   $entity_id = current((array)$result['digital_screen_page'])->id;
-  $v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/screen5.txt", print_r($v , TRUE), FILE_APPEND);
+  //$v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
   //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
   if ($entity_id) {
     $page = new DigitalScreenPage($id);
@@ -188,7 +182,7 @@ function ding_digital_screen_main($id) {
 }
 
 function ding_digital_screen_object($id, $object_id) {
-
+  drupal_add_js(drupal_get_path('module', 'ding_digital_screen') . '/js/ding_digital_screen.js', 'file');
   $page = new DigitalScreenPage($id);
   return $page->renderObject($object_id);
 }
@@ -214,9 +208,6 @@ function ding_digital_screen_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_form_submit().
  */
 function ding_digital_screen_form_add_submit($form, &$form_state) {
-  // file_put_contents("/var/www/drupalvm/drupal/web/debug/screen1.txt", print_r($form, TRUE), FILE_APPEND);
-  // file_put_contents("/var/www/drupalvm/drupal/web/debug/screen2.txt", print_r($form_state, TRUE), FILE_APPEND);
-  // Return for to current search path.
   $form_state['redirect'] = 'admin/structure/ding_digital_screens';
 }
 
@@ -299,9 +290,7 @@ function ding_digital_screen_get_entities($id = null) {
 function ding_digital_screen_get_page($id) {
   $page = new stdClass();
   $result = ding_digital_screen_get_entities($id);
-  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen6.txt", print_r($result, TRUE), FILE_APPEND);
-  $entity_id =current((array)$result['digital_screen_page'])->id;
-  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen7.txt", print_r($entity_id, TRUE), FILE_APPEND);
+  $entity_id = current((array)$result['digital_screen_page'])->id; //Todo check
   if (isset($result['digital_screen_page'])) {
     $string_items_nids = array_keys($result['digital_screen_page']);
     $page = entity_metadata_wrapper('digital_screen_page', $string_items_nids[0]);

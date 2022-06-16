@@ -1,50 +1,89 @@
-.digital-sceen-main {
+.digital-screen-main {
   background-color: #000;
+  display: flex;
+  padding-left: 20px;
+}
+
+#sliding-popup {
+  display: none !important;
+}
+
+.digital-screen-content {
+	width: 90%;
 }
 
 body.page-digital-screen.page-digital  {
   padding-top: 0px !important;
 }
 
-.digital-sceen-carousel h2 {
+.digital-screen-content .ding-carousel {
+	margin-left: 10px;
+}
+
+.digital-screen-carousel {
+  margin-top: 20px;
+}
+
+.digital-screen-carousel h2 {
 	color: #fff;
 }
 
 .digital-screen-object-cover {
 	position: relative;
+  width: 78%;
+}
+
+.digital-screen-content .ding-carousel .slick-slider .slick-track .slick-slide {
+	width: 200px;
+	margin-right: 28px;
+}
+
+.digital-screen-carousel .slick-slider .slick-list {
+	padding-bottom: 8px;
+}
+
+.digital-screen-carousel .ding-carousel .slick-slider {
+	min-height: 28px;
+	max-height: 418px;
 }
 
 .ding-carousel-item .digital-screen-qr-image {
 	position: absolute;
-	top: 80%;
-	left: 60%;
-  width: 25%;
+	top: 82%;
+	left: 75%;
+	width: 30%;
 }
 
-.digital-sceen-carousel ul.horisontal-dots {
+.digital-screen-carousel ul.horisontal-dots, .digital-screen-object-carousel ul.horisontal-dots {
   height: 100%;
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: space-around;;
+  justify-content: center;
   align-items: center;
+  list-style-type: none;
 
 }
 
-.digital-sceen-carousel ul.horisontal-dots li {
-  width: 30px;
-  height: 30px;
+.digital-screen-carousel ul.horisontal-dots li, .digital-screen-object-carousel ul.horisontal-dots li {
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   cursor: pointer;
   background-color: #f4f4e4;
+  margin-right: 8px;
 }
 
-/* .active{
-  box-shadow: 0 0 0 3px #222 , 0 0 0 6px #222;
-} */
+.digital-screen-carousel ul.horisontal-dots li.active {
+  background-color: #3bcf83;
+}
 
 
 /* Digital screen objects page */
+
+body.page-digital-screen-object {
+  background-color: #000;
+}
 
 .digital-screen-object-page {
   background-color: #000;
@@ -59,10 +98,52 @@ body.page-digital-screen.page-digital  {
 
 .digital-screen-object-container {
   display: flex; 
+  justify-content: space-between;
 }
 
 .digital-screen-object-page-cover {
-	width: 40%;
+	width: 47%;
+}
+
+.digital-screen-object-qr-image-container {
+	width: 30%;
+}
+
+.digital-screen-object-qr-text {
+	color: #3bcf83;
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+  margin-left: 20px;
+}
+
+.digital-screen-object-qr-text h2 {
+  margin-bottom: 0px;
+}
+
+.digital-screen-object-qr {
+	display: flex;
+  justify-content: center;
+}
+
+.digital-screen-object-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+  margin-left: 30px;
+  width: 95%;
+}
+
+.digital-screen-object-page .digital-screen-carousel {
+  margin-top: 30px;
+}
+
+.digital-screen-object-page .ding-carousel {
+	margin-top: 20px;
+}
+
+.digital-screen-object-page  .digital-screen-object-cover {
+  width: 85%;
 }
 
 .digital-screen-object-carousel .ding-carousel .slick-slider {
@@ -75,7 +156,8 @@ body.page-digital-screen.page-digital  {
 }
 
 .digital-screen-object-page  .ding-carousel .slick-slider .slick-track .slick-slide {
-  width: 145px;
+  width: 112px;
+  margin-right: 0px;
 }
 
 .digital-screen-object-actions {
@@ -92,7 +174,7 @@ nav {
   top: 30%;
   bottom: 30%;
   right: 2%;
-  width: 60px;
+  width: 45px;
   padding: 30px 0;
 }
 
@@ -102,59 +184,34 @@ nav ul {
   padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;;
+  justify-content: center;
   align-items: center;
+  list-style-type: none;
 
 }
 
 nav ul li {
-  width: 30px;
-  height: 30px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   cursor: pointer;
   background-color: #f4f4e4;
+  margin-bottom: 8px;
 }
 
 .active{
-  box-shadow: 0 0 0 3px red , 0 0 0 6px red;
+  background-color: #3bcf83;
+}
+
+.digital-screen-object-help {
+	position: fixed;
+	bottom: 2%;
+	right: 2%;
 }
 
 /* Admin page */
 
 .page-admin-structure-digital-screen li.ding-carousel-item {
   margin-right: 50px;
-}
-
-
-
-
-.slick-dots {
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  padding: 1rem 0;
-
-  list-style-type: none;
-}
-
-.slick-dots li {
-  margin: 0 0.25rem;
-}
-
-.slick-dots li button {
-  display: block;
-  width: 1rem;
-  height: 1rem;
-  padding: 0;
-  
-  border: none;
-  border-radius: 100%;
-  background-color: orange;
-  
-  text-indent: -9999px;
-}
-
-.slick-dots li.slick-active button {
-  background-color: red;
 }
 

@@ -29,21 +29,18 @@ class DigitalScreenPage {
    * @return string $html
    *   The html for the page.
    */
-  public function renderPage(bool $useCache = true) {
+  public function renderPage(bool $useCache = false) {
     $output = [];
     $cache = cache_get($this->id, 'cache_digital_screen_pages');
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/object4.txt", print_r($cache->data, TRUE), FILE_APPEND);
     if (!$cache || !$useCache) {
       $carousels = $this->handleCarousels();
       cache_set($this->id, $carousels, 'cache_digital_screen_pages');
-      file_put_contents("/var/www/drupalvm/drupal/web/debug/object3.txt", print_r($carousels, TRUE), FILE_APPEND);
     } else {
       $carousels = $cache->data;
     }
     foreach ($carousels as $title => $carousel) {
       $output[$title] = drupal_render($carousel);
     }
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/object5.txt", print_r($output, TRUE), FILE_APPEND);
     return theme('ding_digital_screen_main', ['carousels' => $output, 'info' => $this->getInfo()]);
   }
 
@@ -80,7 +77,6 @@ class DigitalScreenPage {
       $result = $this->handleCarousel($carousel);
       $results[$result['title']] = $result['carousel'];
     }
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen9.txt", print_r($carousels, TRUE), FILE_APPEND);
     return $results;
   }
 
@@ -91,7 +87,7 @@ class DigitalScreenPage {
   private function handleCarousel($carousel) {
     $items  = [];
     $carousel_entity = entity_metadata_wrapper('paragraphs_item', $carousel);
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car1.txt", print_r($carousel_entity, TRUE), FILE_APPEND);
+
     $title = $carousel_entity->field_ds_title->value();
     $query = $carousel_entity->field_search->value();
     $rotate = $carousel_entity->field_rotate->value();
@@ -105,7 +101,6 @@ class DigitalScreenPage {
 
     foreach ($items as $item) {
       $item->carousel = $carousel;
-      //file_put_contents("/var/www/drupalvm/drupal/web/debug/object1.txt", print_r($item, TRUE), FILE_APPEND);
       $cacheId = $this->createObjectCacheId($item->objectid);
       cache_set($cacheId, $item, 'cache_digital_screen_objects');
     }
@@ -120,7 +115,6 @@ class DigitalScreenPage {
   private function getObjects($query) { 
     $objects = $this->search($query, 1, 50);
     $covers = $this->get_covers($objects);
-    file_put_contents("/var/www/drupalvm/drupal/web/debug/items1.txt", print_r($objects, TRUE), FILE_APPEND);
     return $this->handleCovers($covers, $objects);
   }
 
@@ -134,7 +128,6 @@ class DigitalScreenPage {
     $page = 1;
     while ($objects_retrieved < $number_of_objects) {
       $results = $this->search($query, $page, 50);
-      //file_put_contents("/var/www/drupalvm/drupal/web/debug/rot3.txt", print_r($results , TRUE), FILE_APPEND);
       foreach ($results as $key => $object) {
         $objects[$key] =  $object;
       }
@@ -142,7 +135,6 @@ class DigitalScreenPage {
       $page++;
     }
     
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/rot1.txt", print_r($objects , TRUE), FILE_APPEND);
     $covers = $this->get_covers($objects);
     $covers = $this->shuffle_assoc($covers);
     return $this->handleCovers($covers, $objects);
@@ -172,8 +164,6 @@ class DigitalScreenPage {
     $items = [];
     $objects_per_carousel = variable_get('$objects_per_carousel', 16);
     $found_covers = array_slice($covers, 0, $objects_per_carousel);
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car4.txt", print_r($objects, TRUE), FILE_APPEND);
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/car6.txt", print_r($covers, TRUE), FILE_APPEND);
 
     foreach ($found_covers as $objectId => $cover) {
       $path = $this->object_path($objectId);
@@ -243,7 +233,6 @@ class DigitalScreenPage {
 
 
   function createItem($objectId, $object) {
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/items2.txt", print_r($object, TRUE), FILE_APPEND);
     $item = new DigitalScreenObject();
     $item->objectid = $objectId;
     $item->cover = $this->getCoverImage($objectId, 'ting_search_carousel');
@@ -254,7 +243,6 @@ class DigitalScreenPage {
     $item->abstract = $object->getAbstract();
     $item->series = $this->getSeries($object);
     $item->type =$object->getType();
-    //file_put_contents("/var/www/drupalvm/drupal/web/debug/items3.txt", print_r($item , TRUE), FILE_APPEND);
     return $item; 
   }
 
@@ -266,7 +254,6 @@ class DigitalScreenPage {
 
   function getSeries($object) {
     if (!empty($object->getSeriesTitles())) {
-      //file_put_contents("/var/www/drupalvm/drupal/web/debug/items4.txt", print_r($object->getSeriesTitles(), TRUE), FILE_APPEND);
       $series = $object->getSeriesTitles()[0];
       $series_title = $series[0];
       if (isset($series[1])) {
@@ -280,7 +267,6 @@ class DigitalScreenPage {
   }
 
   function createObject($objectId, $object, $item) {
-
     return theme('ding_digital_screen_item', ['item' => $item]);
   }
 
@@ -363,7 +349,6 @@ class DigitalScreenPage {
 
     // Fetch covers by calling hook.
     foreach (module_implements('ting_covers') as $module) {
-      //file_put_contents("/var/www/drupalvm/drupal/web/debug/car8.txt", print_r($module, TRUE), FILE_APPEND);
       foreach (module_invoke($module, 'ting_covers', $entities) as $id => $uri) {
         if ($uri && $path = _ting_covers_get_file($id, $uri)) {
           $covers[$id] = $path;
@@ -393,7 +378,7 @@ class DigitalScreenPage {
   function create_cr($object_id) {
     $path = $this->qr_path($object_id);
     $url = url('ting/object/' . $object_id, ['absolute' => TRUE]);
-    QRcode::png($url, $path); 
+    QRcode::png($url, $path, QR_ECLEVEL_H, 10); 
   }
 
   function check_uploadet_cover($id) {
@@ -408,6 +393,7 @@ class DigitalScreenPage {
   function qr_path($object_id) {
     return file_default_scheme() . '://digital_screen_images' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR . 'qr' . base64_encode($object_id) . '.jpg';
   }
+
 
   function prepare_directories() {
     $path = file_default_scheme() . '://digital_screen_images';

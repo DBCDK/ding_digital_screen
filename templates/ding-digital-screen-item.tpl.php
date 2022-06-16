@@ -12,7 +12,4 @@
       <?php print $item->cover ?>
       <?php print $item->qr ?>
     </div>
-    <!-- <div class="digital-screen-qr">
-
-    </div> -->
 <?php endif; ?>
