@@ -29,7 +29,7 @@ class DigitalScreenPage {
    * @return string $html
    *   The html for the page.
    */
-  public function renderPage(bool $useCache = false) {
+  public function renderPage(bool $useCache = true) {
     $output = [];
     $cache = cache_get($this->id, 'cache_digital_screen_pages');
     if (!$cache || !$useCache) {
