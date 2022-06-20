@@ -64,6 +64,7 @@
     </div>
     <div class="digital-screen-object-help">
       <?php print $object->info ?>
+      <?php print $object->popup ?>
     </div>
   </div>
 </div>

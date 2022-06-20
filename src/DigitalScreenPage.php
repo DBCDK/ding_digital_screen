@@ -34,14 +34,14 @@ class DigitalScreenPage {
     $cache = cache_get($this->id, 'cache_digital_screen_pages');
     if (!$cache || !$useCache) {
       $carousels = $this->handleCarousels();
-      cache_set($this->id, $carousels, 'cache_digital_screen_pages');
+      cache_set($this->id, $carousels, 'cache_digital_screen_pages', REQUEST_TIME + 86400);
     } else {
       $carousels = $cache->data;
     }
     foreach ($carousels as $title => $carousel) {
       $output[$title] = drupal_render($carousel);
     }
-    return theme('ding_digital_screen_main', ['carousels' => $output, 'info' => $this->getInfo()]);
+    return theme('ding_digital_screen_main', ['carousels' => $output, 'info' => $this->getInfo(), 'popup' => $this->getPopup()]);
   }
 
   /**
@@ -59,6 +59,7 @@ class DigitalScreenPage {
     }
     $object->data->backArrow = $this->getBackArrow();
     $object->data->info = $this->getInfo();
+    $object->data->popup = $this->getPopup();
     $page = theme('ding_digital_screen_object', ['object' => $object->data]);
     return $page;
   }
@@ -102,13 +103,13 @@ class DigitalScreenPage {
     foreach ($items as $item) {
       $item->carousel = $carousel;
       $cacheId = $this->createObjectCacheId($item->objectid);
-      cache_set($cacheId, $item, 'cache_digital_screen_objects');
+      cache_set($cacheId, $item, 'cache_digital_screen_objects', REQUEST_TIME + 86400);
     }
 
     return ['carousel' => $carousel, 'title' => $title]; 
   }
 
-    /**
+  /**
    *Handles Caraousels.
    * 
    */
@@ -371,8 +372,11 @@ class DigitalScreenPage {
   function getInfo() {
     $image_path = drupal_get_path('module', 'ding_digital_screen') . '/images/questionmark.png';
     $image = theme('image', ['path' => $image_path]);
-//Todo text
     return $image;
+  }
+
+  function getPopup() {
+    return theme('ding_digital_screen_popup');
   }
 
   function create_cr($object_id) {

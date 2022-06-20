@@ -16,6 +16,10 @@ html .example::-webkit-scrollbar {
   display: none !important;
 }
 
+.page-digital-screen #chat-widget-container, .page-digital-screen-object #chat-widget-container {
+	display: none;
+}
+
 .digital-screen-content {
 	width: 90%;
 }
@@ -86,6 +90,31 @@ body.page-digital-screen.page-digital  {
   background-color: #3bcf83;
 }
 
+.digital-screen-popup {
+	background-color: #c4c4c4;
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	width: 400px;
+	text-align: center;
+	font-size: 18px;
+  margin-right: 20px;
+}
+
+.digital-screen-popup-close {
+	position: relative;
+	left: 380px;
+	border-radius: 50%;
+	background-color: #c4c4c4;
+	width: 40px;
+	height: 40px;
+	padding-top: 11px;
+	font-size: 24px;
+	text-align: center;
+	color: #fff;
+	top: -20px;
+}
 
 /* Digital screen objects page */
 

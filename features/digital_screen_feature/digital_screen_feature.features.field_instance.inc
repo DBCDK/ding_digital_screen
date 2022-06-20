@@ -315,7 +315,7 @@ function digital_screen_feature_field_default_field_instances() {
     'bundle' => 'ding_digital_screen_carousel',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Den søgestreng som der søges efter. Kan også være en liste af faustnurmre med mellemrum i mellem. F,eks. 61644113 62220449 osv.',
+    'description' => 'Den søgestreng som der søges efter.',
     'display' => array(
       'default' => array(
         'label' => 'above',

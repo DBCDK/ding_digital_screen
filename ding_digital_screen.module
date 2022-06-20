@@ -79,6 +79,7 @@ function ding_digital_screen_theme($existing, $type, $theme, $path) {
       'variables' => [
         'carousels' => null,
         'info' => '',
+        'popup' => '',
       ],
       'template' => 'ding-digital-screen-main',
       'path' => $path . '/templates',
@@ -97,6 +98,11 @@ function ding_digital_screen_theme($existing, $type, $theme, $path) {
         'item' => null,
       ],
       'template' => 'ding-digital-screen-item',
+      'path' => $path . '/templates',
+    ],
+
+    'ding_digital_screen_popup' => [
+      'template' => 'ding-digital-screen-popup',
       'path' => $path . '/templates',
     ],
   ];

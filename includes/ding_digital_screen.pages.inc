@@ -48,13 +48,11 @@ function ding_digital_screen_add_screen($form, &$form_state) {
 function ding_digital_screen_get_pages() {
   $pages = [];
   $result = ding_digital_screen_get_entities();
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/all1.txt", print_r($result, TRUE), FILE_APPEND);
   if (isset($result['digital_screen_page'])) {
     foreach ($result['digital_screen_page'] as $id => $item) {
       $pages[] = ding_digital_screen_process_page($id);
     }
   }
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/all2.txt", print_r($pages, TRUE), FILE_APPEND);
   return $pages;
 }
 

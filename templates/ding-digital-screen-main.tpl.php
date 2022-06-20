@@ -35,6 +35,7 @@
     </nav>
     <div class="digital-screen-object-help">
       <?php print $info ?>
+      <?php print $popup ?>
     </div>
   </div>
 </div>
