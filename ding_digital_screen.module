@@ -304,3 +304,17 @@ function ding_digital_screen_get_page($id) {
 
   return $page;
 }
+
+/**
+ * Log debug information to watchdog.
+ *
+ * @param string $message
+ *   Message to log.
+ * @param array $variables
+ *   Variables in the message.
+ */
+function ding_digital_screen_debug_log($message, array $variables = []) {
+  if (variable_get('ding_digital_screen_enable_logging', FALSE)) {
+    watchdog('ding_digital_screen', $message, $variables, WATCHDOG_DEBUG);
+  }
+}

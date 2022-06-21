@@ -376,6 +376,7 @@ class DigitalScreenPage {
   }
 
   function getPopup() {
+    ding_digital_screen_debug_log(theme('ding_digital_screen_popup'));
     return theme('ding_digital_screen_popup');
   }
 
