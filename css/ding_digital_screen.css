@@ -20,6 +20,10 @@ html .example::-webkit-scrollbar {
 	display: none;
 }
 
+.page-admin-structure-digital-screen .digital-screen-popup {
+  display: none;
+}
+
 .digital-screen-content {
 	width: 90%;
 }
