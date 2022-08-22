@@ -9,7 +9,9 @@
 
 <div class="digital-screen-object-page">
   <div class="digital-screen-object">
-
+    <div class="digital-screen-object-carousel-title">
+      <h2><?php print $object->carousel['#title'] ?></h2>
+    </div>
     <div class="digital-screen-object-container">
       <div class="digital-screen-object-page-cover">
         <?php print $object->bigCover ?>
@@ -33,27 +35,28 @@
         <div class="digital-screen-object-abstract">
           <?php print $object->abstract ?>
         </div>
-        <div class="digital-screen-object-qr">
-          <div class="digital-screen-object-qr-image-container">
-            <?php print $object->qr ?>
-          </div>
-          <div class="digital-screen-object-qr-text">
-            <h2>
+      </div>
+      <div class="digital-screen-object-qr">
+        <div class="digital-screen-object-qr-image-container">
+          <?php print $object->qr ?>
+        </div>
+        <div class="digital-screen-object-qr-text">
+          <h2>
             Scan koden</br>
             med din mobil</h2>
-          </div>
         </div>
       </div>
+
     </div>
     <div class="digital-screen-carousel">
       <hr>
       <?php print drupal_render($object->carousel) ?>
       <ul class="horisontal-dots">
-            <li class="horisontal-dot horisontal-dot--1 active"></li>
-            <li class="horisontal-dot horisontal-dot--2"></li>
-            <li class="horisontal-dot horisontal-dot--3"></li>
-            <li class="horisontal-dot horisontal-dot--4"></li>
-          </ul>
+        <li class="horisontal-dot horisontal-dot--1 active"></li>
+        <li class="horisontal-dot horisontal-dot--2"></li>
+        <li class="horisontal-dot horisontal-dot--3"></li>
+        <li class="horisontal-dot horisontal-dot--4"></li>
+      </ul>
     </div>
 
   </div>

@@ -25,7 +25,7 @@ html .example::-webkit-scrollbar {
 }
 
 .digital-screen-content {
-	width: 90%;
+	width: 92%;
 }
 
 body.page-digital-screen.page-digital  {
@@ -50,8 +50,8 @@ body.page-digital-screen.page-digital  {
 }
 
 .digital-screen-content .ding-carousel .slick-slider .slick-track .slick-slide {
-	width: 200px;
-	margin-right: 28px;
+  width: 210px;
+  margin-right: 22px;
 }
 
 .digital-screen-carousel .slick-slider .slick-list {
@@ -72,7 +72,7 @@ body.page-digital-screen.page-digital  {
 
 .digital-screen-carousel ul.horisontal-dots, .digital-screen-object-carousel ul.horisontal-dots {
   height: 100%;
-  margin: 0;
+  margin-bottom: 20px;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -92,6 +92,10 @@ body.page-digital-screen.page-digital  {
 
 .digital-screen-carousel ul.horisontal-dots li.active {
   background-color: #3bcf83;
+}
+
+.digital-screen-carousel hr {
+  border: 1px solid #474747;
 }
 
 .digital-screen-popup {
@@ -120,6 +124,10 @@ body.page-digital-screen.page-digital  {
 	top: -20px;
 }
 
+.digital-screen-sidebar {
+  border-left: 2px solid #474747;
+}
+
 /* Digital screen objects page */
 
 body.page-digital-screen-object {
@@ -134,7 +142,7 @@ body.page-digital-screen-object {
 }
 
 .digital-screen-object {
-  width: 92%
+  width: 95%
 }
 
 .digital-screen-object-container {
@@ -143,11 +151,16 @@ body.page-digital-screen-object {
 }
 
 .digital-screen-object-page-cover {
-	width: 47%;
+	width: 72%;
 }
 
 .digital-screen-object-qr-image-container {
-	width: 30%;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.digital-screen-object-content-top {
+  margin-bottom: 20px;
 }
 
 .digital-screen-object-qr-text {
@@ -163,16 +176,20 @@ body.page-digital-screen-object {
 }
 
 .digital-screen-object-qr {
-	display: flex;
-  justify-content: center;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  margin-right: 20px;
 }
 
 .digital-screen-object-content {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: flex-start;
   margin-left: 30px;
   width: 95%;
+  margin-right: 20px;
+}
 }
 
 .digital-screen-object-page .digital-screen-carousel {
@@ -197,7 +214,7 @@ body.page-digital-screen-object {
 }
 
 .digital-screen-object-page  .ding-carousel .slick-slider .slick-track .slick-slide {
-  width: 112px;
+  width: 115px;
   margin-right: 0px;
 }
 
@@ -205,7 +222,8 @@ body.page-digital-screen-object {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	padding-left: 30px;
+	padding-left: 17px;
+  border-left: 2px solid #474747;;
 }
 
 /* Horisontal progress bar. */
