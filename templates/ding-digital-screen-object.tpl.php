@@ -2,7 +2,7 @@
 
 /**
  * @file
- * A loan status item.
+ * Template for the object page.
  * 
  */
 ?>

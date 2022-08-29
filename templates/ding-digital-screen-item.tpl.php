@@ -2,7 +2,7 @@
 <?php
 /**
  * @file
- * The initial react code
+ * Template for a carousel item.
  * 
  *
  */

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * The initial react code
+ * Template for the main digital screen page.
  * 
  *
  */

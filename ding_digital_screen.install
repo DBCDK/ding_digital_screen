@@ -34,7 +34,7 @@ function ding_digital_screen_schema() {
  */
 function ding_digital_screen_uninstall() {
   // Unset variables.
- // variable_del('ding_redia_film_enable_logging');
+  variable_del('ding_redia_film_enable_logging');
 }
 
  

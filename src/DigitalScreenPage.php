@@ -45,7 +45,7 @@ class DigitalScreenPage {
   }
 
   /**
-   * Renders the object.
+   * Renders a object.
    * 
    * @return string $html
    *   The html for the page.
@@ -65,7 +65,7 @@ class DigitalScreenPage {
   }
 
   /**
-   *Handles Caraousels.
+   * Handles Caraousels.
    * 
    */
   private function handleCarousels() {
@@ -82,7 +82,7 @@ class DigitalScreenPage {
   }
 
   /**
-   *Handles Carousels.
+   * Handles Single Carousel.
    * 
    */
   private function handleCarousel($carousel) {
@@ -110,7 +110,7 @@ class DigitalScreenPage {
   }
 
   /**
-   *Handles Caraousels.
+   * Gets objects from the well.
    * 
    */
   private function getObjects($query) { 
@@ -120,7 +120,7 @@ class DigitalScreenPage {
   }
 
   /**
-   *Handles Caraousels.
+   * Gets objects from the well which are rotated.
    * 
    */
   private function getObjectsWithRotation($query, $number_of_objects) {
@@ -142,7 +142,7 @@ class DigitalScreenPage {
   }
 
   /**
-   *Handles Caraousels.
+   * Shuffles the objects.
    * 
    */
   private function shuffle_assoc($list) { 
@@ -157,8 +157,10 @@ class DigitalScreenPage {
     return $random; 
   } 
 
-     /**
-   *Handles Caraousels.
+   /**
+   * Handles covers.
+   * 
+   * Finds a number of objects which have covers and creates a object item for those.
    * 
    */
   private function handleCovers($covers, $objects) {
@@ -214,6 +216,10 @@ class DigitalScreenPage {
     return $entities;
   }
 
+  /**
+   * Creates a carousel.
+   * 
+   */
   function createCarousel($items, $title) {
     $render_items = [];
     foreach ($items as $item) {
@@ -232,7 +238,10 @@ class DigitalScreenPage {
     return $carousel;
   }
 
-
+  /**
+   * Creates a object item.
+   * 
+   */
   function createItem($objectId, $object) {
     $item = new DigitalScreenObject();
     $item->objectid = $objectId;
@@ -247,12 +256,20 @@ class DigitalScreenPage {
     return $item; 
   }
 
+  /**
+   * Renders the title.
+   * 
+   */
   function getTitle($object) {
     $title = $object->getTitle();
     $languge = $object->getLanguage();
     return $title . '(' . $languge . ')';
   }
 
+  /**
+   * Renders the series.
+   * 
+   */
   function getSeries($object) {
     if (!empty($object->getSeriesTitles())) {
       $series = $object->getSeriesTitles()[0];
@@ -267,10 +284,18 @@ class DigitalScreenPage {
     return null;
   }
 
+  /**
+   * Renders the object.
+   * 
+   */
   function createObject($objectId, $object, $item) {
     return theme('ding_digital_screen_item', ['item' => $item]);
   }
 
+  /**
+   * Renders a QR image.
+   * 
+   */
   function getQrImage($objectId) {
     $path = $this->qr_path($objectId);
     $var = [
@@ -280,6 +305,10 @@ class DigitalScreenPage {
     return theme('image', $var);
   }
   
+  /**
+   * Renders a cover image.
+   * 
+   */
   function getCoverImage($objectId, $style) {
     $url = 'digital/screen/' . $this->id . '/object/' . $objectId;
     $path = $this->object_path($objectId);
@@ -293,6 +322,10 @@ class DigitalScreenPage {
     return l($image, $url, $options);
   }
 
+  /**
+   * Renders creators.
+   * 
+   */
   function get_creators($object) {
     if (count($object->getCreators())) {
       if ($object->getDate()!= '') {
@@ -361,6 +394,10 @@ class DigitalScreenPage {
     return $covers;
   }
 
+  /**
+   * Renders a back arrow.
+   * 
+   */
   function getBackArrow() {
     $path = 'digital/screen/' . $this->id;
     $image_path = drupal_get_path('module', 'ding_digital_screen') . '/images/arrow.png';
@@ -369,37 +406,64 @@ class DigitalScreenPage {
     return l($image, $path, $options);
   }
 
+  /**
+   * Renders a question mark.
+   * 
+   */
   function getInfo() {
     $image_path = drupal_get_path('module', 'ding_digital_screen') . '/images/questionmark.png';
     $image = theme('image', ['path' => $image_path]);
     return $image;
   }
 
+  /**
+   * Renders the info popup.
+   * 
+   */
   function getPopup() {
     ding_digital_screen_debug_log(theme('ding_digital_screen_popup'));
     return theme('ding_digital_screen_popup');
   }
 
+  /**
+   * Create a QR code.
+   * 
+   */
   function create_cr($object_id) {
     $path = $this->qr_path($object_id);
     $url = url('ting/object/' . $object_id, ['absolute' => TRUE]);
     QRcode::png($url, $path, QR_ECLEVEL_H, 10); 
   }
 
+  /**
+   * Check if there was uploaded a cover.
+   * 
+   */
   function check_uploadet_cover($id) {
     $path = file_default_scheme() . '://digital_screen_images/' . $id . '.*';
     return glob (drupal_realpath($path));
   }
 
+  /**
+   * Get the file path for a cover.
+   * 
+   */
   function object_path($object_id) {
     return file_default_scheme() . '://digital_screen_images' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR . base64_encode($object_id) . '.jpg';
   }
 
+  /**
+   * Get the file path for a qr image.
+   * 
+   */
   function qr_path($object_id) {
     return file_default_scheme() . '://digital_screen_images' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR . 'qr' . base64_encode($object_id) . '.jpg';
   }
 
-
+  /**
+   * Prepare the directories and delete previous versions.
+   * 
+   */
   function prepare_directories() {
     $path = file_default_scheme() . '://digital_screen_images';
     file_prepare_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
@@ -411,7 +475,7 @@ class DigitalScreenPage {
   }
 
   /**
-   *Handles Caraousels.
+   * Create a caching id for a object.
    * 
    */
   private function createObjectCacheId($object_id) {

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Handles the shoving off Ding Digital Screens.
+ * Handles the showing off Ding Digital Screens.
  */
 
 
@@ -148,21 +148,25 @@ function ding_digital_screen_secure_permissions($role) {
  * Implementation of hook_preprocess_HOOK().
  */
 function ding_digital_screen_preprocess_ding_carousel(&$vars){
-  file_put_contents("/var/www/drupalvm/drupal/web/debug/slick1.txt", print_r($vars, TRUE), FILE_APPEND);
   if (isset($vars['slick_settings'])) {
     $vars['slick_settings']['arrows'] = false;
   }
 }
 
+/**
+ * Add a digital screen page.
+ */
 function ding_digital_screen_main_add() {
   $entity_type_name = 'digital_screen_page';
   $entity_bundle_name = 'digital_screen_page';
   module_load_include('inc', 'eck', 'eck.entity');
 
-
   return eck__entity__add($entity_type_name, $entity_bundle_name);
 }
 
+/**
+ * Edit a digital screen page.
+ */
 function ding_digital_screen_main_edit($id) {
   $entity_type_name = 'digital_screen_page';
   $entity_bundle_name = 'digital_screen_page';
@@ -170,8 +174,6 @@ function ding_digital_screen_main_edit($id) {
   $result = ding_digital_screen_get_entities($id);
 
   $entity_id = current((array)$result['digital_screen_page'])->id;
-  //$v = drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id));
-  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen4.txt", print_r(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id), TRUE), FILE_APPEND);
   if ($entity_id) {
     $page = new DigitalScreenPage($id);
     return drupal_render(eck__entity__edit($entity_type_name, $entity_bundle_name, $entity_id)) . $page->renderPage(false);
@@ -181,12 +183,18 @@ function ding_digital_screen_main_edit($id) {
   }
 }
 
+/**
+ * Render a digital screen page.
+ */
 function ding_digital_screen_main($id) {
   drupal_add_js(drupal_get_path('module', 'ding_digital_screen') . '/js/ding_digital_screen.js', 'file');
   $page = new DigitalScreenPage($id);
   return $page->renderPage();
 }
 
+/**
+ * Render a digital screen object page.
+ */
 function ding_digital_screen_object($id, $object_id) {
   drupal_add_js(drupal_get_path('module', 'ding_digital_screen') . '/js/ding_digital_screen.js', 'file');
   $page = new DigitalScreenPage($id);
@@ -196,9 +204,10 @@ function ding_digital_screen_object($id, $object_id) {
 
 /**
  * Implements hook_form_alter().
+ * 
+ * We implement our own submit functions.
  */
 function ding_digital_screen_form_alter(&$form, &$form_state, $form_id) {
-  //file_put_contents("/var/www/drupalvm/drupal/web/debug/screen3.txt", print_r($form_id, TRUE), FILE_APPEND);
   // Check when the right form is passed.
   if ($form_id == 'eck__entity__form_add_digital_screen_page_digital_screen_page') {
     $form['redirect']['#access'] = FALSE;
@@ -225,7 +234,9 @@ function ding_digital_screen_form_edit_submit($form, &$form_state) {
 }
 
 /**
- * Watch film trailer.
+ * Add digital screens to the template search_blank.
+ * 
+ * We do this in order to take over the whole page including menus, header and footer.
  */
 function ding_digital_screen_add_site_template_config() {
   // There is no hook we can use so we interact directly with ctools module.
@@ -265,6 +276,9 @@ function ding_digital_screen_add_site_template_config() {
   }
 }
 
+/**
+ * Get digital screen page entities.
+ */
 function ding_digital_screen_get_entities($id = null) {
   try {
     module_load_include('inc', 'eck', 'eck.entity');
