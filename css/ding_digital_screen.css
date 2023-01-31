@@ -1,6 +1,9 @@
+body.page-digital-screen {
+  background-color: #000;
+}
+
 .digital-screen-main {
   background-color: #000;
-  display: flex;
   padding-left: 20px;
 }
 
@@ -24,20 +27,12 @@ html .example::-webkit-scrollbar {
   display: none;
 }
 
-.digital-screen-content {
-	width: 92%;
-}
-
 body.page-digital-screen.page-digital  {
   padding-top: 0px !important;
 }
 
-.digital-screen-content .ding-carousel {
-	margin-left: 10px;
-}
-
 .digital-screen-carousel {
-  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .digital-screen-carousel h2 {
@@ -46,7 +41,7 @@ body.page-digital-screen.page-digital  {
 
 .digital-screen-object-cover {
 	position: relative;
-  width: 78%;
+  width: 90%;
 }
 
 .digital-screen-content .ding-carousel .slick-slider .slick-track .slick-slide {
@@ -100,19 +95,20 @@ body.page-digital-screen.page-digital  {
 
 .digital-screen-popup {
 	background-color: #c4c4c4;
-	color: #fff;
+	color: #000;
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
 	width: 400px;
 	text-align: center;
 	font-size: 18px;
-  margin-right: 20px;
+  position: fixed;
+  right: 45px;
+  z-index: 1;
 }
 
 .digital-screen-popup-close {
 	position: relative;
-	left: 380px;
 	border-radius: 50%;
 	background-color: #c4c4c4;
 	width: 40px;
@@ -120,13 +116,18 @@ body.page-digital-screen.page-digital  {
 	padding-top: 11px;
 	font-size: 24px;
 	text-align: center;
-	color: #fff;
-	top: -20px;
+	color: #000;
+	top: -18px;
+  z-index: 1;
 }
 
-.digital-screen-sidebar {
-  border-left: 2px solid #474747;
+.digital-screen-main .digital-screen-object-help {
+	display: flex;
+	justify-content: end;
+  padding-top: 15px;
+  padding-right: 15px;
 }
+
 
 /* Digital screen objects page */
 
@@ -139,10 +140,7 @@ body.page-digital-screen-object {
   display: flex; 
   padding: 30px;
   color: #fff;
-}
-
-.digital-screen-object {
-  width: 95%
+  flex-direction: column;
 }
 
 .digital-screen-object-container {
@@ -151,12 +149,13 @@ body.page-digital-screen-object {
 }
 
 .digital-screen-object-page-cover {
-	width: 72%;
+	width: 62%;
 }
 
 .digital-screen-object-qr-image-container {
-  width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: end;
 }
 
 .digital-screen-object-content-top {
@@ -166,9 +165,8 @@ body.page-digital-screen-object {
 .digital-screen-object-qr-text {
 	color: #3bcf83;
 	display: flex;
-	flex-direction: column;
 	justify-content: end;
-  margin-left: 20px;
+  margin-right: 10px;
 }
 
 .digital-screen-object-qr-text h2 {
@@ -179,7 +177,6 @@ body.page-digital-screen-object {
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  margin-right: 20px;
 }
 
 .digital-screen-object-content {
@@ -220,10 +217,21 @@ body.page-digital-screen-object {
 
 .digital-screen-object-actions {
 	display: flex;
-	flex-direction: column;
 	justify-content: space-between;
 	padding-left: 17px;
-  border-left: 2px solid #474747;;
+  margin-bottom: 15px;
+}
+
+.digital-screen-object-carousel-title {
+	margin-left: 20px;
+}
+
+.digital-screen-object-return {
+	display: flex;
+}
+
+.digital-screen-qr-image {
+	width: 80%;
 }
 
 /* Horisontal progress bar. */
@@ -258,15 +266,10 @@ nav ul li {
   margin-bottom: 8px;
 }
 
-.active{
+/* .active{
   background-color: #3bcf83;
-}
+} */
 
-.digital-screen-object-help {
-	position: fixed;
-	bottom: 2%;
-	right: 2%;
-}
 
 /* Admin page */
 

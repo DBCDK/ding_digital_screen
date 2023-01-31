@@ -8,10 +8,20 @@
 ?>
 
 <div class="digital-screen-object-page">
-  <div class="digital-screen-object">
-    <div class="digital-screen-object-carousel-title">
-      <h2><?php print $object->carousel['#title'] ?></h2>
+<div class="digital-screen-object-actions">
+    <div class="digital-screen-object-return">
+      <?php print $object->backArrow ?>
+      <div class="digital-screen-object-carousel-title">
+        <h2><?php print $object->carousel['#title'] ?></h2>
     </div>
+    </div>
+    <div class="digital-screen-object-help">
+      <?php print $object->info ?>
+      <?php print $object->popup ?>
+    </div>
+  </div>
+  <div class="digital-screen-object">
+
     <div class="digital-screen-object-container">
       <div class="digital-screen-object-page-cover">
         <?php print $object->bigCover ?>
@@ -51,23 +61,9 @@
     <div class="digital-screen-carousel">
       <hr>
       <?php print drupal_render($object->carousel) ?>
-      <ul class="horisontal-dots">
-        <li class="horisontal-dot horisontal-dot--1 active"></li>
-        <li class="horisontal-dot horisontal-dot--2"></li>
-        <li class="horisontal-dot horisontal-dot--3"></li>
-        <li class="horisontal-dot horisontal-dot--4"></li>
-      </ul>
     </div>
 
   </div>
 
-  <div class="digital-screen-object-actions">
-    <div class="digital-screen-object-return">
-      <?php print $object->backArrow ?>
-    </div>
-    <div class="digital-screen-object-help">
-      <?php print $object->info ?>
-      <?php print $object->popup ?>
-    </div>
-  </div>
+
 </div>
