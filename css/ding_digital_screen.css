@@ -165,8 +165,8 @@ body.page-digital-screen-object {
 .digital-screen-object-qr-text {
 	color: #3bcf83;
 	display: flex;
-	justify-content: end;
-  margin-right: 10px;
+  justify-content: center;
+  width: 80%;
 }
 
 .digital-screen-object-qr-text h2 {
@@ -177,6 +177,7 @@ body.page-digital-screen-object {
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+  align-items: flex-end;
 }
 
 .digital-screen-object-content {
