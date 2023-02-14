@@ -8,14 +8,13 @@
 ?>
 
 <div class="digital-screen-object-page">
-<div class="digital-screen-object-actions">
-    <div class="digital-screen-object-return">
-      <?php print $object->backArrow ?>
-      <div class="digital-screen-object-carousel-title">
-        <h2><?php print $object->carousel['#title'] ?></h2>
+  <div class="digital-screen-object-actions">
+    <div class="digital-screen-object-carousel-title">
+      <h2><?php print $object->carousel['#title'] ?></h2>
     </div>
-    </div>
+
     <div class="digital-screen-object-help">
+      <?php print $object->backArrow ?>
       <?php print $object->info ?>
       <?php print $object->popup ?>
     </div>
@@ -52,8 +51,7 @@
         </div>
         <div class="digital-screen-object-qr-text">
           <h2>
-            Scan koden</br>
-            med din mobil</h2>
+          <?php print t('Scan og lån') ?>
         </div>
       </div>
 
@@ -62,8 +60,5 @@
       <hr>
       <?php print drupal_render($object->carousel) ?>
     </div>
-
   </div>
-
-
 </div>
