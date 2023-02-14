@@ -204,12 +204,12 @@ body.page-digital-screen-object {
 
 
 .digital-screen-object-page  .digital-screen-object-cover a img {
-  height: 235px !important;
-  width: 160px !important;
+  height: 220px !important;
+  width: 150px !important;
 }
 
 .digital-screen-object-page  .ding-carousel .slick-slider .slick-track .slick-slide {
-  width: 200px;
+  width: 185px;
   margin-right: 0px;
 }
 
