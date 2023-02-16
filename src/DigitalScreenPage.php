@@ -54,7 +54,8 @@ class DigitalScreenPage {
     $cacheId = $this->createObjectCacheId($objectId);
     $object =  cache_get($cacheId, 'cache_digital_screen_objects');
     if (!$object) {
-      $this->handleCarousels();
+      $carousels = $this->handleCarousels();
+      cache_set($this->id, $carousels, 'cache_digital_screen_pages', REQUEST_TIME + 86400);
       $object =  cache_get($cacheId, 'cache_digital_screen_objects');
     }
     $object->data->backArrow = $this->getBackArrow();
