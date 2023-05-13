@@ -148,7 +148,8 @@ function ding_digital_screen_secure_permissions($role) {
  * Implementation of hook_preprocess_HOOK().
  */
 function ding_digital_screen_preprocess_ding_carousel(&$vars){
-  if (isset($vars['slick_settings'])) {
+  $path = current_path();
+  if (isset($vars['slick_settings']) && strpos($path, 'digital/screen/') === 0) {
     $vars['slick_settings']['arrows'] = false;
   }
 }
